@@ -1,7 +1,7 @@
 # SpringBOot
 
 #### Role based user management system with JWT (access and refresh tokens) and Swagger-ui
-##### (Covers all important concepts of spring boot :thumbsup:)
+##### :star2: Covers all important concepts of spring boot :star2:
 
 <!-- Images -->
 <img src="src/main/resources/Images/admin_login_access_token.png">

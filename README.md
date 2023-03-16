@@ -10,7 +10,6 @@
 #### Dependencies used
 * Spring Web
 * Spring Security
-* Lombok
 * Spring Data Jpa
 * Open API (Swagger-ui - for API Documentation)
 * MySQL Driver

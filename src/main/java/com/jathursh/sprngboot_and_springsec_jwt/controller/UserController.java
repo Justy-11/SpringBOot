@@ -59,7 +59,7 @@ public class UserController {
     })  // there can be multiple responses, Above annotations for swagger-ui
     @GetMapping("/users")
     @SecurityRequirement(name = "bearer-token")  // -- added on 14/3/2023 --
-    private ResponseEntity<List<User>>getUsers(){
+    public ResponseEntity<List<User>>getUsers(){
         return ResponseEntity.ok().body(userService.getUsers());
     }
 
@@ -79,10 +79,11 @@ public class UserController {
     })
     @PostMapping("/user/save")
     @SecurityRequirement(name = "bearer-token")  // -- added on 14/3/2023 --
-    private ResponseEntity<User>saveUser(@RequestBody User user){
-        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/user/save").toUriString());
-        return ResponseEntity.created(uri).body(userService.saveUser(user));
+    public ResponseEntity<User>saveUser(@RequestBody User user){
+        return ResponseEntity.ok().body(userService.saveUser(user));
     }
+    // URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/user/save").toUriString());
+    // TODO: error when testing it, current context path is not found
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////
     @Operation(summary = "This API will save the role of user in DB")
@@ -99,10 +100,11 @@ public class UserController {
     })
     @PostMapping("/role/save")
     @SecurityRequirement(name = "bearer-token")  // -- added on 14/3/2023 --
-    private ResponseEntity<Role>saveRole(@RequestBody Role role){
-        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/role/save").toUriString());
-        return ResponseEntity.created(uri).body(userService.saveRole(role));
+    public ResponseEntity<Role>saveRole(@RequestBody Role role){
+        return ResponseEntity.ok().body(userService.saveRole(role));
     }
+
+    // URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/role/save").toUriString());
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////// TODO
     @Operation(summary = "This API will give a role access to another user in DB")
@@ -119,7 +121,7 @@ public class UserController {
     })
     @PostMapping("/role/addtouser")
     @SecurityRequirement(name = "bearer-token")  // -- added on 14/3/2023 --
-    private ResponseEntity<?>addRoleToUser(@RequestBody RoleToUserForm roleToUserForm){
+    public ResponseEntity<?>addRoleToUser(@RequestBody RoleToUserForm roleToUserForm){
         userService.addRoleToUser(roleToUserForm.getUsername(), roleToUserForm.getRoleName());
         return ResponseEntity.ok().build();
     }
@@ -139,7 +141,7 @@ public class UserController {
     })
     @GetMapping("/token/refresh")
     @SecurityRequirement(name = "refresh-token")  // -- added on 14/3/2023 --
-    private void refreshToken(HttpServletRequest request, HttpServletResponse  response) throws IOException {
+    public void refreshToken(HttpServletRequest request, HttpServletResponse  response) throws IOException {
 
         // ** using the access token as refresh token to generate new access token **
         String authorizationHeader = request.getHeader(AUTHORIZATION);

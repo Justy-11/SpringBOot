@@ -1,8 +1,14 @@
 package com.jathursh.sprngboot_and_springsec_jwt.controller;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jathursh.sprngboot_and_springsec_jwt.entity.Role;
 import com.jathursh.sprngboot_and_springsec_jwt.entity.User;
 import com.jathursh.sprngboot_and_springsec_jwt.service.UserService;
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -12,9 +18,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.io.IOException;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -89,8 +95,51 @@ class UserControllerTest {
     }
 
     @Test
-    void refreshToken() {
+    void refreshToken() throws IOException {
+        HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
+        HttpServletResponse response = Mockito.mock(HttpServletResponse.class);
+
+        Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
+
+        String username = "user1";
+        User user = new User();
+        user.setUsername(username);
+        user.setRoles(List.of(new Role()));
+        Mockito.when(userService.getUser(username)).thenReturn(user);
+
+        /*ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        Mockito.when(response.getOutputStream()).thenReturn();*/
+
+        ServletOutputStream outputStreamMock = Mockito.mock(ServletOutputStream.class);
+        Mockito.when(response.getOutputStream()).thenReturn(outputStreamMock);
+
+        /*String authorizationHeader = request.getHeader(AUTHORIZATION);
+        String refresh_token = authorizationHeader.substring("Bearer ".length());
+        JWTVerifier verifier = JWT.require(algorithm).build();
+        DecodedJWT decodedJWT = Mockito.mock(DecodedJWT.class);*/
+
+        String access_token = JWT.create()
+                .withSubject(username)
+                .withExpiresAt(new Date(System.currentTimeMillis() + 10 * 60 * 1000))
+                .withIssuer(request.getRequestURL().toString())
+                .withClaim("roles", user.getRoles().stream().map(Role::getName).collect(Collectors.toList()))
+                .sign(algorithm);
+
+        //Mockito.when(verifier.verify(refresh_token)).thenReturn(decodedJWT);
+        //Mockito.when(request.getHeader("Authorization")).thenReturn("Bearer " + decodedJWT.getToken());
+
+        // Act
+        //refreshTokenController.refreshToken(request, response);
+
+        // Assert
+        String responseString = outputStreamMock.toString();
+        Map<String, String> tokens = new ObjectMapper().readValue(responseString, Map.class);
+        assertTrue(tokens.containsKey("access_token"));
+        assertTrue(tokens.containsKey("refresh_token"));
+
 
 
     }
+
+
 }

@@ -19,10 +19,8 @@ import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.IOException;
-import java.net.URI;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -184,7 +182,7 @@ public class UserController {
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////
-    @Operation(summary = "This API used for testing purposes")
+    /*@Operation(summary = "This API used for testing purposes")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",
                     description = "Said Hello",
@@ -200,7 +198,7 @@ public class UserController {
     @GetMapping("/hello")
     public String sayHello(){
         return "Hello Testing ....";
-    }
+    }*/
 }
 
 @Data
